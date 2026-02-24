@@ -1,0 +1,30 @@
+openapi: 3.0.3
+info:
+  title: Control Plane API
+  version: 1.0.0
+paths:
+  /healthz:
+    get:
+      responses:
+        '200':
+          description: ok
+  /v1/token:
+    post:
+      summary: Issue capability token
+      requestBody:
+        required: true
+      responses:
+        '200':
+          description: token issued
+  /v1/rooms/{roomId}/lock:
+    post:
+      responses:
+        '200': { description: locked }
+  /v1/rooms/{roomId}/unlock:
+    post:
+      responses:
+        '200': { description: unlocked }
+  /v1/rooms/{roomId}/waiting-room:
+    post:
+      responses:
+        '200': { description: waiting room updated }

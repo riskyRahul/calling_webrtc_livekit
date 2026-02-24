@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  livekit:
+    image: livekit/livekit-server:latest
+    command: ["--config", "/etc/livekit.yaml"]
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml:ro
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+      - "50000-50100:50000-50100/udp"
+    depends_on:
+      - redis
+
+  coturn:
+    image: coturn/coturn:latest
+    command: ["-c", "/etc/coturn/turnserver.conf"]
+    volumes:
+      - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
+    ports:
+      - "3478:3478"
+      - "5349:5349"
+
+  control-plane:
+    build:
+      context: ../services/control-plane
+    env_file:
+      - ../services/control-plane/.env
+    ports:
+      - "4000:4000"
+
+  data-plane:
+    build:
+      context: ../services/data-plane
+    env_file:
+      - ../services/data-plane/.env
+    ports:
+      - "5000:5000"
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3001:3000"
+
+volumes:
+  mongo_data:

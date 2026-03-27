@@ -37,7 +37,7 @@ docs/
 
 ## Quick start
 
-1. Copy env files and set secrets:
+1. (Optional) Copy env files if you want to override defaults:
 
 ```bash
 cp services/control-plane/.env.example services/control-plane/.env

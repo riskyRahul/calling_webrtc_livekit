@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   redis:
     image: redis:7-alpine
@@ -38,7 +36,9 @@ services:
     build:
       context: ../services/control-plane
     env_file:
-      - ../services/control-plane/.env
+      - path: ../services/control-plane/.env
+        required: false
+      - path: ../services/control-plane/.env.example
     ports:
       - "4000:4000"
 
@@ -46,7 +46,9 @@ services:
     build:
       context: ../services/data-plane
     env_file:
-      - ../services/data-plane/.env
+      - path: ../services/data-plane/.env
+        required: false
+      - path: ../services/data-plane/.env.example
     ports:
       - "5000:5000"
 
